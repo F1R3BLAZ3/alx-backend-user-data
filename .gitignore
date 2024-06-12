@@ -5,3 +5,4 @@
 0x03-user_authentication_service/main.py
 0x03-user_authentication_service/a.db
 0x03-user_authentication_service/__pycache__/db.cpython-38.pyc
+0x03-user_authentication_service/__pycache__/auth.cpython-38.pyc
