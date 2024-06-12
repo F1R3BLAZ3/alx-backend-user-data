@@ -6,17 +6,8 @@ Auth module
 import bcrypt
 from db import DB
 from user import User
-from sqlalchemy.orm.exc import NoResultFoundimport uuid
-
-
-def _generate_uuid() -> str:
-    """
-    Generate a new UUID string.
-
-    Returns:
-        str: A string representation of the new UUID.
-    """
-    return str(uuid.uuid4())
+from sqlalchemy.orm.exc import NoResultFound
+import uuid
 
 
 def _hash_password(password: str) -> bytes:
@@ -32,6 +23,16 @@ def _hash_password(password: str) -> bytes:
     salt = bcrypt.gensalt()
     hashed = bcrypt.hashpw(password.encode(), salt)
     return hashed
+
+
+def _generate_uuid() -> str:
+    """
+    Generate a new UUID string.
+
+    Returns:
+        str: A string representation of the new UUID.
+    """
+    return str(uuid.uuid4())
 
 
 class Auth:
@@ -80,3 +81,22 @@ class Auth:
                 password.encode(), user.hashed_password.encode())
         except NoResultFound:
             return False
+
+    def create_session(self, email: str) -> str:
+        """
+        Create a session for the user with the given email.
+
+        Args:
+            email (str): The user's email.
+
+        Returns:
+            str: The session ID.
+        """
+        try:
+            user = self._db.find_user_by(email=email)
+            session_id = _generate_uuid()
+            user.session_id = session_id
+            self._db._session.commit()
+            return session_id
+        except NoResultFound:
+            return None
