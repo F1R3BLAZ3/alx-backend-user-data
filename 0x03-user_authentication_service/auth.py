@@ -135,7 +135,7 @@ class Auth:
         user.reset_token = reset_token
         self._db._session.commit()
         return reset_token
-    
+
     def update_password(self, reset_token: str, password: str) -> None:
         """
         Update user's password using a reset token.
